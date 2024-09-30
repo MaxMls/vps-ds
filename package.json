@@ -1,0 +1,22 @@
+{
+  "name": "vps-ds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "dotenvx run -- node --watch --experimental-strip-types index.ts"
+  },
+  "engines" : { 
+    "node" : ">=22.9.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.14.2",
+    "@swc/wasm-typescript": "^1.7.28",
+    "discord.js": "^14.16.3",
+    "nodemon": "^3.1.7"
+  }
+}
