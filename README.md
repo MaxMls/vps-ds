@@ -19,3 +19,10 @@ This project enables starting and stopping a Satisfactory server hosted on Digit
 ### `/satisfactory-stop`
 1. Creates a new snapshot from the active droplet.
 2. Destroys droplet
+
+
+## How to Use: (NodeJS >=22)
+1. Create a `.env` configuration (see example: `.env copy`).
+2. Run `npm i`.
+3. Run `npm run start`.
+4. The script will shut down upon completion of the upload.
