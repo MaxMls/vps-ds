@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "dotenvx run -- node --watch --experimental-strip-types index.ts"
+    "start": "dotenvx run -- node --experimental-strip-types index.ts",
+    "dev": "dotenvx run -- node --watch --experimental-strip-types index.ts"
   },
   "engines" : { 
     "node" : ">=22.9.0"

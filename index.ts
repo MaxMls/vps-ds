@@ -1,6 +1,16 @@
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID
 
+if (!DISCORD_TOKEN) {
+	console.error('Error: DISCORD_TOKEN is not defined in the environment variables.');
+	process.exit(1); // Exit the process with an error code
+}
+
+if (!DISCORD_CLIENT_ID) {
+	console.error('Error: DISCORD_CLIENT_ID is not defined in the environment variables.');
+	process.exit(1); // Exit the process with an error code
+}
+
 import { Collection, Events, REST, Routes, Client, GatewayIntentBits, type Interaction } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,15 +19,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
+// Extend the Client class to include a commands property
+class CustomClient extends Client {
+	commands: Collection<string, any>;
+
+	constructor(options: any) {
+		super(options);
+		this.commands = new Collection();
+	}
+}
 
 // and deploy your commands!
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new CustomClient({ intents: [GatewayIntentBits.Guilds] });
+
+const timeout = setTimeout(()=>{
+	console.error('Error: App start timeout.');
+	process.exit(-1); // Exit the process with an error code
+}, 9000);
 
 client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}!`);
+	console.log(`Logged in as ${client?.user?.tag}!`);
+	clearTimeout(timeout);
 });
-
-client.commands = new Collection();
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
@@ -45,7 +68,7 @@ try {
 	console.log(`Started refreshing ${client.commands.size} application (/) commands.`);
 
 	// The put method is used to fully refresh all commands in the guild with the current set
-	const data = await rest.put(
+	const data: any = await rest.put(
 		Routes.applicationCommands(DISCORD_CLIENT_ID),
 		{ body: client.commands.map(command => command.data) },
 	);
@@ -61,7 +84,7 @@ try {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
-	const command = interaction.client.commands.get(interaction.commandName);
+	const command = client.commands.get(interaction.commandName);
 
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
